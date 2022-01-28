@@ -23,27 +23,29 @@ const UserModel = new Schema({
   cart: {
     items: [
       {
-        foodId: { type: Schema.Types.ObjectId, ref: 'fooddata', required: false},
+        foodId: {
+          type: Schema.Types.ObjectId,
+          ref: "fooddata",
+          required: false,
+        },
         quantity: {
           type: Number,
-          required: false
-        }
+          required: false,
+        },
       },
     ],
   },
 });
 
-UserModel.statics.addToCart = function(foodItems) {
+UserModel.statics.addToCart = function (foodItems) {
   const updatedFoodCart = {
-    items: foodItems
-  }
-  this.cart = updatedFoodCart
-  return this.save()
-}
+    items: foodItems,
+  };
+  this.cart = updatedFoodCart;
+  return this.save();
+};
 
 module.exports = mongoose.model("users", UserModel);
-
-
 
 // const Sequelize = require("sequelize");
 // const { object } = require("webidl-conversions");

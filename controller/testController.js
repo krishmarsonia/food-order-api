@@ -1,7 +1,8 @@
+const mongoose = require("mongoose");
+
 const User = require("../models/user");
 const Food = require("../models/food");
 const Cart = require("../models/cart");
-const mongoose = require("mongoose");
 // const {ObjectId} = require('mongoose')
 
 exports.datatest = (req, res, next) => {
@@ -15,18 +16,18 @@ exports.datatest = (req, res, next) => {
     .then((r) => {
       // console.log(r.items);
       const items = r.items;
-      
 
-      const arrmap = items.map(({name, quantity}) => ({name, quantity}))
+      const arrmap = items.map(({ name, quantity }) => ({ name, quantity }));
       // console.log(arrmap)
 
-      var newmaparr = arrmap.map(tes => {
-        console.log(tes.name)
+      var newmaparr = arrmap.map((tes) => {
+        console.log(tes.name);
         Food.findOne({
-          name: tes.name
-        }).then(z => console.log(z)).catch(err => console.log(err));
-
-      })
+          name: tes.name,
+        })
+          .then((z) => console.log(z))
+          .catch((err) => console.log(err));
+      });
       // console.log(newmaparr)
       return res.status(200).json({
         status: "Good",

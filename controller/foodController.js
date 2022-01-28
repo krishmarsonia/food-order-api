@@ -16,11 +16,10 @@ exports.postFoodData = (req, res, next) => {
     description: desc,
   });
 
-  food
+  return food
     .save()
     .then((result) => {
-      console.log(result);
-      res.status(200).json({ message: "Added Sucessfully", fItems: result });
+      return res.json({ message: "Added Sucessfully", fItems: result });
     })
     .catch((err) => {
       console.log(err);
@@ -29,19 +28,10 @@ exports.postFoodData = (req, res, next) => {
       }
       return next(err);
     });
-
-  // Food.create({
-  //   type: type,
-  //   name: name,
-  //   imageUrl: imageUrl,
-  //   price: price,
-  //   description: desc,
-  // })
-  // console.log("Krish");
 };
 
 exports.getFoodData = (req, res, next) => {
-  Food.find()
+  return Food.find()
     .then((result) => {
       // console.log(result);
       // const dib = result.map(ob => ob._id.toString())
@@ -49,7 +39,7 @@ exports.getFoodData = (req, res, next) => {
       // result.map(arr => console.log(arr.name))
       // result.filter(res => res.type === 'Pizza').map(ikri => console.log(ikri.type));
       // console.log('----------------------------')
-      res.status(200).json({ foodData: result });
+      return res.json({ foodData: result });
     })
     .catch((err) => {
       console.log(err);
