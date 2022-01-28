@@ -1,23 +1,21 @@
 const express = require("express");
+const bodyparser = require("body-parser");
+const cors = require("cors");
+// const jwt = require('jsonwebtoken')
+const mongoose = require("mongoose");
 
-require('dotenv').config();
+require("dotenv").config();
+const app = express();
 
 require("./models/user");
 require("./models/food");
-
-const bodyparser = require("body-parser");
 
 const userRoutes = require("./Routes/userRoutes");
 const foodRoutes = require("./Routes/foodRoutes");
 const testRoutes = require("./Routes/testRoutes");
 
-const cors = require("cors");
-
-// const jwt = require('jsonwebtoken')
 // const sequelize = require("./util/database");
-const mongoose = require("mongoose");
 
-const app = express();
 
 app.use(cors());
 
@@ -52,6 +50,7 @@ app.use((error, req, res, next) => {
 //   })
 //   .catch((err) => console.log(err));
 
-mongoose.connect(
-  process.env.MONGODB_URI
-).then(result => app.listen(5050, () => console.log("Server Running"))).catch(err => console.log(err));
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then((result) => app.listen(5050, () => console.log("Server Running")))
+  .catch((err) => console.log(err));
