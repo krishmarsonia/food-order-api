@@ -2,7 +2,13 @@ const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
   // console.log(req.get('Authorization'))
-  const header = req.get("Authorization").split(" ")[1];
+  const token = req.get("Authorization");
+  if(!token){
+    const error = new Error('No Authorization Header is present');
+    error.statusCode = 500;
+    throw error
+  }
+  const header = token.split(" ")[1];
   let decodeToken;
   try {
     decodeToken = jwt.verify(header, "secret");

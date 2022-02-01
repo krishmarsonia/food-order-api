@@ -103,10 +103,15 @@ exports.signin = async (req, res, next) => {
             })
               .then((carts) => {
                 // console.log(carts);
-                const quan = carts.items.reduce(
-                  (sum, item) => sum + item.quantity,
-                  0
-                );
+                // if(carts === null){
+                //   const quan = carts.items.reduce(
+                //     (sum, item) => sum + item.quantity,
+                //     0
+                //   );
+                // }else{
+                //   const quan = 0;
+                // }
+                
 
                 if (carts === null) {
                   const car = new Cart({
@@ -166,18 +171,18 @@ exports.signin = async (req, res, next) => {
 exports.postCartAdd = (req, res, next) => {
   //user ni id excaart kari ne
   var kri = [];
-  // console.log(req.body.data.cartArray)
-  // console.log(req.body.data.userid)
+  const userId = req.userId
+  
   const cartItems = req.body.data.cartArray;
   // console.log(cartItems);
-  const userId = req.body.data.userid;
+  // const userId = req.body.data.userid;
   // User.findById(userId).then(res => {
   //   console.log(res.cart.items)
   // }).catch(err => console.log(err))
   // console.log(cartItems)
-  const maparray = cartItems.map((i) => {
-    return { foodId: i._id, quantity: i.quantity };
-  });
+  // const maparray = cartItems.map((i) => {
+  //   return { foodId: i._id, quantity: i.quantity };
+  // });
   // console.log(maparray);
   // Cart.updateOne(
   //   {_id: userId},
@@ -253,7 +258,7 @@ exports.postCartAdd = (req, res, next) => {
 };
 
 exports.existingCart = (req, res, next) => {
-  console.log(req.userId);
+  // console.log(req.userId);
   const id = req.userId;
   Cart.findOne({
     userId: id,

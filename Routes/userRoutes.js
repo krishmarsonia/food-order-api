@@ -1,7 +1,7 @@
 const express = require("express");
 
 const userController = require("../controller/userController");
-const authMiddleware = require("../Middleware/is-auth");
+const authMiddleware = require("../Middlewares/is-auth");
 
 const router = express.Router();
 
@@ -11,10 +11,10 @@ router.post("/sign", userController.signin);
 
 // router.post("/cartAdd", userController.PostCartAdd);
 
-router.post("/cartAdd", userController.postCartAdd);
+router.post("/cartAdd",authMiddleware, userController.postCartAdd);
 
-router.post("/findcart", authMiddleware, userController.existingCart);
+router.get("/findcart", authMiddleware, userController.existingCart);
 
-router.post("/findcount", authMiddleware, userController.existingCartCount);
+router.get("/findcount", authMiddleware, userController.existingCartCount);
 
 module.exports = router;
