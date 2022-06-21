@@ -1,13 +1,27 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+const { validationResult } = require('express-validator/check')
+
 const User = require("../models/user");
 const Cart = require("../models/cart");
-
 
 // const Cart = require('../models/cart');
 
 exports.signup = (req, res, next) => {
+  if(req.body.data === undefined){
+    const err = new Error('no username');
+    throw err;
+  }
+  // if(!req.body.data.email){
+  //   const err = new Error('no email recived');
+  //   throw err;
+  // }
+  // if(!req.body.data.password){
+  //   const err = new Error('no password recived');
+  //   throw err;
+  // }
+
   const userName = req.body.data.userName;
   // console.log(req.body.data.userName);
   const email = req.body.data.email;
@@ -52,7 +66,13 @@ exports.signup = (req, res, next) => {
                 return next(err);
               });
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {
+            console.log(err);
+            if (!err.statusCode) {
+              err.statusCode = 500;
+            }
+            return next(err);
+          });
       }
     })
     .catch((err) => {
@@ -69,10 +89,18 @@ exports.signin = async (req, res, next) => {
   const email = req.body.data.email;
   const password = req.body.data.password;
   // throw new Error('developed by developer')
+  const errors = validationResult(req)
+  if(!errors.isEmpty()){
+    console.log(errors.array());
+    return res.json({
+      error: 'Error loging in'
+    }) 
+  }
   User.findOne({
     email: email,
   })
     .then((result) => {
+      console.log(result);
       if (!result) {
         // res.send("Creadentials are wrong")
         const err = new Error("Creadentials are wrong");
@@ -111,7 +139,6 @@ exports.signin = async (req, res, next) => {
                 // }else{
                 //   const quan = 0;
                 // }
-                
 
                 if (carts === null) {
                   const car = new Cart({
@@ -129,6 +156,7 @@ exports.signin = async (req, res, next) => {
                         id: result._id,
                         token: token,
                         cart: carts,
+                        error: null
                         // quantity: 0,
                       });
                     })
@@ -171,8 +199,8 @@ exports.signin = async (req, res, next) => {
 exports.postCartAdd = (req, res, next) => {
   //user ni id excaart kari ne
   var kri = [];
-  const userId = req.userId
-  
+  const userId = req.userId;
+
   const cartItems = req.body.data.cartArray;
   // console.log(cartItems);
   // const userId = req.body.data.userid;
@@ -208,7 +236,13 @@ exports.postCartAdd = (req, res, next) => {
           .catch((err) => console.log(err));
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
 
   // Cart.create
   // User.addToCart(maparray);
@@ -269,20 +303,31 @@ exports.existingCart = (req, res, next) => {
         cart: carts,
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      return next(err);
+    });
 };
 
 exports.existingCartCount = (req, res, next) => {
   const id = req.userId;
   Cart.findOne({
-    userId: id
-  }).then(cart => {
-    const quan = cart.items.reduce(
-      (sum, item) => sum + item.quantity,
-      0
-    );
-    return res.status(201).json({
-      quantity: quan
+    userId: id,
+  })
+    .then((cart) => {
+      const quan = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+      return res.status(201).json({
+        quantity: quan,
+      });
     })
-  }).catch(err => console.log(err))
-}
+    .catch((err) => {
+      console.log(err);
+      if(!err.statusCode){
+        err.statusCode = 500;
+      }
+      return next(err);
+    });
+};

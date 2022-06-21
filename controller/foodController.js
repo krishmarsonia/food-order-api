@@ -31,7 +31,7 @@ exports.postFoodData = (req, res, next) => {
 };
 
 exports.getFoodData = (req, res, next) => {
-  return Food.find()
+  Food.find()
     .then((result) => {
       // console.log(result);
       // const dib = result.map(ob => ob._id.toString())
@@ -43,5 +43,30 @@ exports.getFoodData = (req, res, next) => {
     })
     .catch((err) => {
       console.log(err);
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      return next(err);
     });
+};
+
+exports.testFood = (req, res, next) => {
+  const foodArray = [
+    {
+      id: 1,
+      name: "pizza",
+      desc: "amazing pizza",
+    },
+    {
+      id: 2,
+      name: "sandwich",
+      desc: "amazing sandwich",
+    },
+    {
+      id: 3,
+      name: "burger",
+      desc: "amazing burger",
+    },
+  ];
+  res.json({foodData: foodArray, status:200});
 };

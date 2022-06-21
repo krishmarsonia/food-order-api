@@ -10,4 +10,6 @@ router.post( '/submitfood',authMiddleware, foodController.postFoodData);
 
 router.get('/getFood', foodController.getFoodData);
 
+router.get('/testFood', foodController.testFood)
+
 module.exports = router;

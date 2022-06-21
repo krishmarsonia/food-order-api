@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const app = express();
 
-require("./models/user");
+// require("./models/user");
 require("./models/food");
 
 const userRoutes = require("./Routes/userRoutes");
@@ -15,7 +15,6 @@ const foodRoutes = require("./Routes/foodRoutes");
 const testRoutes = require("./Routes/testRoutes");
 
 // const sequelize = require("./util/database");
-
 
 app.use(cors());
 
@@ -52,5 +51,7 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(process.env.MONGODB_URI)
-  .then((result) => app.listen(5050, () => console.log("Server Running")))
+  .then((result) => {
+    module.exports = app.listen(5050, () => console.log("Server Running"));
+  })
   .catch((err) => console.log(err));
